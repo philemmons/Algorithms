@@ -1,0 +1,74 @@
+/* Title: adj_matrix.cpp
+ * Abstract: THis converts a directed graph stored in an input file into an
+ * 	adjacency matrix format. Your program should get an input file name from
+ * 	a user first. Then, it should read the content of the file and display
+ * 	the graph in the adjacency matrix format.
+ * Author: Phillip T. Emmons
+ * ID: 9902
+ * Date: 02/06/2017
+ */
+#include <iostream>
+#include <fstream>
+#include <queue>
+#include <string>
+#include <cstdlib>
+
+using namespace std;
+
+int main() {
+	string fileName;  //Stores the file name entered by the user.
+	ifstream fin;     //Read input from the file.
+	queue<int> q;     //Dynamic storage, FIFO for the text file data.
+	int input = 0,    //Store file data to be pushed on queue.
+		numV = 0,    //Stores the number of Vertices from file and is matrix dimensions.
+		numE = 0,     // Also, it stores the number of Edges for the user display.
+		valRow = 0, valCol = 0;// Both are the 2d array index to place a '1'.
+
+
+	//User enters filename, IOstream opens file, and a check.
+	cout<< "Enter the filename: ";
+	cin>> fileName;
+	cout<< "Opening file"<< endl;
+	fin.open( fileName) ;
+	if( fin.fail() ){
+		cerr << "NO file open!"<< endl;
+		exit(-1);
+	}
+	cout<<"File opened."<<endl;
+
+	//This will read the data and 'push' it to the queue.
+	while( !fin.eof()   ){
+		fin >> input;
+		q.push( input );
+	}
+	cout<< "File read and sent to queue"<< endl;
+	fin.close();
+	cout << "File stream closed.\n"<< endl;
+
+	//Display file data from queue, creates the 2d array and initialize all cells to zero.
+	//Also, two pops are made in the while loop for the coordinates to assign value of '1'.
+	numV = q.front();
+	cout<< "Number of vertices: "<< numV<< endl;
+	int matrix[numV][numV] = {};
+	q.pop();
+	numE = q.front();
+	cout<< "Number of edges: "<< numE<< endl;
+	q.pop();
+	cout<< "Adjanency Matrix:"<< endl;
+	while( !q.empty() ){
+		valRow = q.front();
+		q.pop();
+		valCol = q.front();
+		q.pop();
+		matrix[valRow][valCol] = 1;
+	}
+
+	//Display 2d array to console.
+	for( int i= 0; i < numV; i++ ){
+		for( int k= 0; k< numV; k++ ){
+			cout<< matrix[i][k] << " ";
+		}
+		cout<< endl;
+	}
+	return 0;
+}
